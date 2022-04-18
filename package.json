@@ -1,0 +1,110 @@
+{
+    "name": "mindustry-logic",
+    "publisher": "vortetty",
+    "displayName": "Mindustry Logic",
+    "description": "Mindustry logic assembly highlighting + (incomplete) Compiler [(made by Superstormer)](https://github.com/SuperStormer/c2logic)",
+    "version": "2.0.0",
+    "repository": {
+        "url": ""
+    },
+    "engines": {
+        "vscode": "^1.66.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Other"
+    ],
+    "scripts": {
+        "lint": "eslint .",
+        "pretest": "npm run lint",
+        "test": "code --extensionDevelopmentPath=$(realpath .)"
+    },
+    "main": "./extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "mlog",
+                "aliases": [
+                    "Mindustry Logic",
+                    "mlog"
+                ],
+                "extensions": [
+                    ".mlog",
+                    ".masm"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "mlog",
+                "scopeName": "source.mlog",
+                "path": "./syntaxes/mlog.tmLanguage.jsonc"
+            }
+        ],
+        "commands": [
+            {
+                "command": "mindustry-logic.compileLogicO0",
+                "title": "Compile logic file (unoptimized)"
+            },
+            {
+                "command": "mindustry-logic.compileLogicO1",
+                "title": "Compile logic file (no temp vars)"
+            },
+            {
+                "command": "mindustry-logic.compileLogicO2",
+                "title": "Compile logic file (no temp vars, remove unused functions)"
+            },
+            {
+                "command": "mindustry-logic.compileLogicO3",
+                "title": "Compile logic file (no temp vars, remove unused functions, other potentially unsafe optimizations)"
+            },
+            {
+                "command": "mindustry-logic.createIncludes",
+                "title": "Create c2logic include headers"
+            }
+        ],
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "mindustry-logic.compileLogicO0",
+                    "when": "editorLangId == 'c'"
+                },
+                {
+                    "command": "mindustry-logic.compileLogicO1",
+                    "when": "editorLangId == 'c'"
+                },
+                {
+                    "command": "mindustry-logic.compileLogicO2",
+                    "when": "editorLangId == 'c'"
+                },
+                {
+                    "command": "mindustry-logic.compileLogicO3",
+                    "when": "editorLangId == 'c'"
+                }
+            ]
+        }
+    },
+    "activationEvents": [
+        "onCommand:mindustry-logic.compileLogicO0",
+        "onCommand:mindustry-logic.compileLogicO1",
+        "onCommand:mindustry-logic.compileLogicO2",
+        "onCommand:mindustry-logic.compileLogicO3",
+        "onCommand:mindustry-logic.createIncludes"
+    ],
+    "devDependencies": {
+        "@types/glob": "^7.2.0",
+        "@types/mocha": "^9.1.0",
+        "@types/node": "14.x",
+        "@types/vscode": "^1.66.0",
+        "@vscode/test-electron": "^2.1.3",
+        "eslint": "^8.11.0",
+        "glob": "^7.2.0",
+        "mocha": "^9.2.2",
+        "typescript": "^4.5.5"
+    },
+    "dependencies": {
+        "child_process": "^1.0.2",
+        "wait-forever": "^1.0.0"
+    }
+}
