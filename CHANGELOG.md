@@ -4,6 +4,11 @@ All notable changes to the "mindustry-logic" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 2.1.0-alpha\<n>
+
+### alpha0
+
+Beginnings of semantic tokens+highlighting
 ## 2.0.2
 
 Basic highlighting

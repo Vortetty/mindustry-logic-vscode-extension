@@ -3,8 +3,10 @@
     "publisher": "vortetty",
     "displayName": "Mindustry Logic",
     "description": "Mindustry logic assembly highlighting + (incomplete) Compiler [(made by Superstormer)](https://github.com/SuperStormer/c2logic)",
-    "version": "2.0.2",
+    "version": "2.1.0-alpha0",
+	"license": "Apache 2.0",
     "repository": {
+		"type": "git",
         "url": "https://github.com/Vortetty/mindustry-logic-vscode-extension"
     },
     "engines": {
@@ -35,13 +37,13 @@
                 "configuration": "./language-configuration.json"
             }
         ],
-        "grammars": [
-            {
-                "language": "mlog",
-                "scopeName": "source.mlog",
-                "path": "./syntaxes/mlog.tmLanguage.jsonc"
-            }
-        ],
+        //"grammars": [
+        //    {
+        //        "language": "mlog",
+        //        "scopeName": "source.mlog",
+        //        "path": "./syntaxes/mlog.tmLanguage.jsonc"
+        //    }
+        //],
         "commands": [
             {
                 "command": "mindustry-logic.compileLogicO0",
@@ -109,5 +111,10 @@
     "dependencies": {
         "child_process": "^1.0.2",
         "wait-forever": "^1.0.0"
+    },
+    "configurationDefaults": {
+      "mlog": {
+        "editor.semanticHighlighting.enabled": true
+      }
     }
 }
