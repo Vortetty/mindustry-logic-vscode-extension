@@ -4,9 +4,9 @@
     "displayName": "Mindustry Logic",
     "description": "Mindustry logic assembly highlighting + (incomplete) Compiler [(made by Superstormer)](https://github.com/SuperStormer/c2logic)",
     "version": "2.1.0-alpha0",
-	"license": "Apache 2.0",
+    "license": "Apache 2.0",
     "repository": {
-		"type": "git",
+        "type": "git",
         "url": "https://github.com/Vortetty/mindustry-logic-vscode-extension"
     },
     "engines": {
@@ -17,18 +17,26 @@
         "Other"
     ],
     "scripts": {
-        "lint": "eslint .",
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "lint": "eslint . --ext .ts,.tsx",
+        "watch": "tsc -watch -p ./",
         "pretest": "npm run lint",
-        "test": "code --extensionDevelopmentPath=$(realpath .)"
+        "test": "npm run compile && code --extensionDevelopmentPath=$(realpath .)"
     },
-    "main": "./extension.js",
+    "main": "./out/extension.js",
     "contributes": {
+        "configurationDefaults": {
+            "[mlog]": {
+                "editor.semanticHighlighting.enabled": true
+            }
+        },
         "languages": [
             {
                 "id": "mlog",
                 "aliases": [
                     "Mindustry Logic",
-                    "mlog"
+                    "MLOG"
                 ],
                 "extensions": [
                     ".mlog",
@@ -37,13 +45,20 @@
                 "configuration": "./language-configuration.json"
             }
         ],
-        //"grammars": [
-        //    {
-        //        "language": "mlog",
-        //        "scopeName": "source.mlog",
-        //        "path": "./syntaxes/mlog.tmLanguage.jsonc"
-        //    }
-        //],
+        "semanticTokenTypes": [
+            { "id": "mlog_method",    "superType": "method",    "description": "Instructions (e.g. sensor, op, etc.)" },
+            { "id": "mlog_keyword",   "superType": "keyword",   "description": "Keywords (e.g. pwr, xor, etc.)" },
+            { "id": "mlog_parameter", "superType": "parameter", "description": "Parameters (e.g. node1)" },
+            { "id": "mlog_variable",  "superType": "variable",  "description": "Variables set by user, also built-in constants" },
+            { "id": "mlog_string",    "superType": "string",    "description": "Strings (e.g. \"Hello World\", 'Hello World')" },
+            { "id": "mlog_number",    "superType": "number",    "description": "Numbers (e.g. 123, -123, 0.123)" },
+            { "id": "mlog_comment",   "superType": "comment",   "description": "Comments (e.g. # <comment text>)" }
+        ],
+        "semanticTokenModifiers": [
+            { "id": "mlog_readonly", "superType": "readonly", "description": "Built-in constants" },
+            { "id": "mlog_invalid",                           "description": "Invalid parameter type or syntax" },
+            { "id": "unknown",                                "description": "Unknown parameter but correct type" }
+        ],
         "commands": [
             {
                 "command": "mindustry-logic.compileLogicO0",
@@ -95,7 +110,8 @@
         "onCommand:mindustry-logic.compileLogicO1",
         "onCommand:mindustry-logic.compileLogicO2",
         "onCommand:mindustry-logic.compileLogicO3",
-        "onCommand:mindustry-logic.createIncludes"
+        "onCommand:mindustry-logic.createIncludes",
+        "onLanguage:mlog"
     ],
     "devDependencies": {
         "@types/glob": "^7.2.0",
@@ -103,6 +119,8 @@
         "@types/node": "14.x",
         "@types/vscode": "^1.66.0",
         "@vscode/test-electron": "^2.1.3",
+        "@typescript-eslint/eslint-plugin": "^5.19.0",
+        "@typescript-eslint/parser": "^5.19.0",
         "eslint": "^8.11.0",
         "glob": "^7.2.0",
         "mocha": "^9.2.2",
@@ -111,10 +129,5 @@
     "dependencies": {
         "child_process": "^1.0.2",
         "wait-forever": "^1.0.0"
-    },
-    "configurationDefaults": {
-      "mlog": {
-        "editor.semanticHighlighting.enabled": true
-      }
     }
 }

@@ -13,4 +13,4 @@
 :: limitations under the License.
 
 for %%i in (".") do SET "absPathClean=%%~fi"
-code --extensionDevelopmentPath %absPathClean% %*
+npm run compile && code --extensionDevelopmentPath %absPathClean% %*
