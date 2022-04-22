@@ -14,6 +14,7 @@
 
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
+import { identifyType, IParsedToken, updateVars } from './parsers/globals';
 
 function getOpenFile(): string | undefined {
 	if (vscode.window.activeTextEditor != undefined) {
@@ -48,7 +49,7 @@ function getCurrentWorkspace(): string | undefined {
 function activate(context: vscode.ExtensionContext) {
 	let myExtDir = context.extensionPath;
 	let pythonScript = myExtDir + "/python/c2logic/compiler.py";
-	var isWin = process.platform === "win32"; // This is a just in case i need it
+	let isWin = process.platform === "win32"; // This is a just in case i need it
 
 	const execShell = (cmd: string) =>
 		new Promise((resolve, reject) => {
@@ -138,19 +139,9 @@ module.exports = {
 	deactivate
 }
 
-
-
-
 // 
 // Semantic highlighting
 // 
-interface IParsedToken {
-	line: number;
-	startCharacter: number;
-	length: number;
-	tokenType: string;
-	tokenModifiers: string[];
-}
 
 const tokenTypes = new Map<string, number>();
 const tokenModifiers = new Map<string, number>();
@@ -208,16 +199,17 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
 	private async _parseText(text: string): Promise<IParsedToken[]> {
 		const r: IParsedToken[] = [];
 		const lines = text.split(/\r\n|\r|\n/);
+		updateVars(lines);
 		for (let i = 0; i < lines.length; i++) {
 			const line = lines[i];
-			const words = line.split(/(\w+|\s+|".*"|'.*')/g).filter(x => x !== '');
+			const words = line.split(/([\w@-]+|\s+|".*"|'.*')/g).filter(x => x !== '');
 
 			if (commands.get(words[0]) != undefined) {
-				(await commands.get(words[0])!(i, words, line)).forEach((token) => {
+				(await commands.get(words[0])!(i, words, line, lines)).forEach((token) => {
 					r.push(token);
 				});
 			} else if (words[0] != undefined) {
-				(await commands.get('__internal_unknown_instruction')!(i, words, line)).forEach((token) => {
+				(await commands.get('__internal_unknown_instruction')!(i, words, line, lines)).forEach((token) => {
 					r.push(token);
 				});
 			}
@@ -234,83 +226,74 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
 	}
 }
 
-function identifyType(text: string): string {
-	if (text.startsWith("\"") || text.startsWith("'") && text.endsWith(text.substring(0, 1))) {
-		return "mlog_string";
-	} else if (/\d+/.test(text)) {
-		return "mlog_number";
-	} else {
-		return "mlog_keyword";
-	}
-};
+let commands: Map<string, (lineNum: number, words: string[], line: string, lines: string[]) => Promise<IParsedToken[]>> = new Map();
 
-let commands: Map<string, (lineNum: number, words: string[], line: string) => Promise<IParsedToken[]>> = new Map();
+// Command order
+//  - !Read         | read outvar cell1 0
+//  - Write         | write outvar cell1 0
+//  - Draw          | draw clear 0 0 0 0 0 0
+//  - Print         | print "frog"
+//  - Draw Flush    | drawflush display1
+//  - Print Flush   | printflush message1
+//  - !Get Link     | getlink outvar 0
+//  - Control       | control enabled block1 0 0 0 0
+//  - Radar         | radar enemy any any distance turret1 1 result
+//  - !Sensor       | sensor outvar block1 @copper
+//  - !Set          | set outvar 0
+//  - !Operation    | op add outvar a b
+//  - Wait          | wait 0.5
+//  - !Lookup       | lookup item outvar 0
+//  - End           | end
+//  - Jump          | jump -1 notEqual x false
+//  - Unit Bind     | ubind @poly
+//  - Unit Control  | ucontrol approach 0 0 0 0 0
+//  - !Unit Radar   | uradar enemy any any distance 0 1 outvar
+//  - !Unit Locate  | ulocate building core true @copper outx outy outvar outvar
 
-commands.set(
-	'set', 
-	async function(lineNum: number, words: string[], line: string): Promise<IParsedToken[]> {
-		let tokens: IParsedToken[] = [];
-		let offset = 0;
-		let parsedWords = 0;
+import { __internal_unknown_instructionParser } from './parsers/__internal_unknown_instruction';
 
-		for (let i = 0; i < Math.ceil(words.length/2); i++) {
-			let token = words[i*2]==undefined ? "" : words[i*2];
-			let spaces = words[i*2+1] == undefined ? 0 : words[i*2+1].length;
+import { readParser } from './parsers/read';
+import { writeParser } from './parsers/write';
+//import { drawParser } from './parsers/draw';
+//import { printParser } from './parsers/print';
+//import { drawflushParser } from './parsers/drawflush';
+//import { printflushParser } from './parsers/printflush';
+//import { getlinkParser } from './parsers/getlink';
+//import { controlParser } from './parsers/control';
+//import { radarParser } from './parsers/radar';
+//import { sensorParser } from './parsers/sensor';
+import { setParser } from './parsers/set';
+//import { opParser } from './parsers/op';
+//import { waitParser } from './parsers/wait';
+//import { lookupParser } from './parsers/lookup';
+//import { endParser } from './parsers/end';
+//import { jumpParser } from './parsers/jump';
+//import { ubindParser } from './parsers/ubind';
+//import { ucontrolParser } from './parsers/ucontrol';
+//import { uradarParser } from './parsers/uradar';
+//import { ulocateParser } from './parsers/ulocate';
 
-			let tokenType = '';
-			if (i == 0)      tokenType = 'mlog_method';
-			else if (i == 1) tokenType = 'mlog_variable';
-			else 		     tokenType = identifyType(token);
 
-			let _tokenModifiers: string[] = i > 2 ? ['invalid'] : [];
 
-			tokens.push(
-				{
-					line: lineNum,
-					startCharacter: offset,
-					length: token.length,
-					tokenType: tokenType,
-					tokenModifiers: _tokenModifiers
-				}
-			);
-			offset += token.length + spaces;
-			parsedWords++;
-		}
+commands.set("__internal_unknown_instruction", __internal_unknown_instructionParser);
 
-		return tokens;
-	}
-)
-
-commands.set(
-	"__internal_unknown_instruction",
-	async function(lineNum: number, words: string[], line: string): Promise<IParsedToken[]> {
-		let tokens: IParsedToken[] = [];
-		let offset = 0;
-		let parsedWords = 0;
-
-		for (let i = 0; i < Math.ceil(words.length/2); i++) {
-			let token = words[i*2]==undefined ? "" : words[i*2];
-			let spaces = words[i*2+1] == undefined ? 0 : words[i*2+1].length;
-
-			let tokenType = '';
-			if (i == 0)      tokenType = 'mlog_method';
-			else 		     tokenType = identifyType(token);
-
-			let _tokenModifiers: string[] = ['unknown'];
-
-			tokens.push(
-				{
-					line: lineNum,
-					startCharacter: offset,
-					length: token.length,
-					tokenType: tokenType,
-					tokenModifiers: _tokenModifiers
-				}
-			);
-			offset += token.length + spaces;
-			parsedWords++;
-		}
-
-		return tokens;
-	}
-);
+commands.set("read",  readParser);
+commands.set("write", writeParser);
+//commands.set("draw",  drawParser);
+//commands.set("print", printParser);
+//commands.set("drawflush", drawflushParser);
+//commands.set("printflush", printflushParser);
+//commands.set("getlink", getlinkParser);
+//commands.set("control", controlParser);
+//commands.set("radar", radarParser);
+//commands.set("sensor", sensorParser);
+commands.set("set", setParser);
+//commands.set("op", opParser);
+//commands.set("wait", waitParser);
+//commands.set("lookup", lookupParser);
+//commands.set("end", endParser);
+//commands.set("jump", jumpParser);
+//commands.set("ubind", ubindParser);
+//commands.set("ucontrol", ucontrolParser);
+//commands.set("uradar", uradarParser);
+//commands.set("ulocate", ulocateParser);
