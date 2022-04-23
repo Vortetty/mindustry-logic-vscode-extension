@@ -1,4 +1,4 @@
-let validBlocks: string[] = [ // https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/content/Blocks.java
+export let validBlocks: string[] = [ // https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/content/Blocks.java
     "air", "spawn", "cliff", "deepwater", "water", "taintedWater", "deepTaintedWater", "tar", "slag", "cryofluid", "stone", "craters", "charr", "sand", "darksand", "dirt", "mud", "ice", "snow", "darksandTaintedWater", "space", "empty",
     "dacite",
     "stoneWall", "dirtWall", "sporeWall", "iceWall", "daciteWall", "sporePine", "snowPine", "pine", "shrubs", "whiteTree", "whiteTreeDead", "sporeCluster",
@@ -59,16 +59,16 @@ let validBlocks: string[] = [ // https://github.com/Anuken/Mindustry/blob/master
     "launchPad", "interplanetaryAccelerator"
 ].map(block => `@${block}`);
 
-let validItems: string[] = [ // https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/content/Items.java
+export let validItems: string[] = [ // https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/content/Items.java
     "scrap", "copper", "lead", "graphite", "coal", "titanium", "thorium", "silicon", "plastanium",
     "phaseFabric", "surgeAlloy", "sporePod", "sand", "blastCompound", "pyratite", "metaglass"
 ].map(item => `@${item}`);
 
-let validLiquids: string[] = [ // https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/content/Liquids.java
+export let validLiquids: string[] = [ // https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/content/Liquids.java
     "water", "slag", "oil", "cryofluid"
 ].map(liquid => `@${liquid}`);
 
-let predefinedVars: string[] = [
+export let predefinedVars: string[] = [
     "@this",
     "@thisx",
     "@thisy",
@@ -84,20 +84,20 @@ let predefinedVars: string[] = [
     "@counter"
 ];
 
-let sensableVars: string[] = [
+export let sensableVars: string[] = [
     ...validBlocks,
     ...validItems,
     ...validLiquids
 ];
 
-let allPredefines: string[] = [
+export let allPredefines: string[] = [
     ...predefinedVars,
     ...sensableVars
 ]
 
-let userDefinedVars: Set<string> = new Set();
+export let userDefinedVars: Set<string> = new Set();
 
-let allVars: string[] = [
+export let allVars: string[] = [
     ...predefinedVars,
     ...userDefinedVars
 ];
@@ -149,18 +149,30 @@ export function updateVars(lines: string[]) {
 //     'mlog_unknown',   // Unknown tokens
 // ];
 // tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
-//
-// const tokenModifiersLegend = [
-//     'mlog_readonly', // Built-in constants
-//     'mlog_invalid',  // Invalid parameter type or syntax
-//     'mlog_unknown',  // Unknown parameter but correct type
-// ];
-export function identifyType(text: string, index:number|undefined=undefined, expectingValue=false, expectingKeyword=false): string {
+export function identifyType(text: string, index: number|undefined=undefined, expectingKeyword=false): string {
     if (index == 0)                                                                           return "mlog_method";
+    else if (text.startsWith("#"))                                                            return "mlog_comment";
     if (text.startsWith("\"") || text.startsWith("'") && text.endsWith(text.substring(0, 1))) return "mlog_string";
     else if (/^\d+$/.test(text))                                                              return "mlog_number";
     else if (allVars.find(v => v === text))                                                   return "mlog_variable";
-    else                                                                                      return expectingValue ? "mlog_variable" : expectingKeyword ? "mlog_keyword" :"mlog_parameter";
+    else if (/^[^0-9].*$/.test(text))                                                         return expectingKeyword ? "mlog_keyword" :"mlog_parameter";
+    else                                                                                      return "mlog_unknown";
+}
+
+// const tokenModifiersLegend = [
+//     'readonly', // Built-in constants
+//     'mlog_invalid',  // Invalid parameter type or syntax
+//     'mlog_unknown',  // Unknown parameter but correct type
+// ];
+export function identifyModifiers(text: string, expectedTypes: string[], index: number, expectingKeyword=false): string[] {
+    let modifiers: string[] = [];
+    let type = identifyType(text, index, expectingKeyword);
+
+    if (allPredefines.find(v => v === text))              modifiers.push("readonly");
+    if (expectedTypes.find(v => v === type) == undefined) modifiers.push("mlog_invalid");
+    if (type === "mlog_unknown")                          modifiers.push("mlog_unknown");
+
+    return modifiers;
 }
 
 export interface IParsedToken {

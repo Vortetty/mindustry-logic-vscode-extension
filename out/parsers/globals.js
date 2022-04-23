@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.identifyType = exports.updateVars = void 0;
-let validBlocks = [
+exports.identifyModifiers = exports.identifyType = exports.updateVars = exports.allVars = exports.userDefinedVars = exports.allPredefines = exports.sensableVars = exports.predefinedVars = exports.validLiquids = exports.validItems = exports.validBlocks = void 0;
+exports.validBlocks = [
     "air", "spawn", "cliff", "deepwater", "water", "taintedWater", "deepTaintedWater", "tar", "slag", "cryofluid", "stone", "craters", "charr", "sand", "darksand", "dirt", "mud", "ice", "snow", "darksandTaintedWater", "space", "empty",
     "dacite",
     "stoneWall", "dirtWall", "sporeWall", "iceWall", "daciteWall", "sporePine", "snowPine", "pine", "shrubs", "whiteTree", "whiteTreeDead", "sporeCluster",
@@ -47,14 +47,14 @@ let validBlocks = [
     //campaign
     "launchPad", "interplanetaryAccelerator"
 ].map(block => `@${block}`);
-let validItems = [
+exports.validItems = [
     "scrap", "copper", "lead", "graphite", "coal", "titanium", "thorium", "silicon", "plastanium",
     "phaseFabric", "surgeAlloy", "sporePod", "sand", "blastCompound", "pyratite", "metaglass"
 ].map(item => `@${item}`);
-let validLiquids = [
+exports.validLiquids = [
     "water", "slag", "oil", "cryofluid"
 ].map(liquid => `@${liquid}`);
-let predefinedVars = [
+exports.predefinedVars = [
     "@this",
     "@thisx",
     "@thisy",
@@ -69,19 +69,19 @@ let predefinedVars = [
     "@maph",
     "@counter"
 ];
-let sensableVars = [
-    ...validBlocks,
-    ...validItems,
-    ...validLiquids
+exports.sensableVars = [
+    ...exports.validBlocks,
+    ...exports.validItems,
+    ...exports.validLiquids
 ];
-let allPredefines = [
-    ...predefinedVars,
-    ...sensableVars
+exports.allPredefines = [
+    ...exports.predefinedVars,
+    ...exports.sensableVars
 ];
-let userDefinedVars = new Set();
-let allVars = [
-    ...predefinedVars,
-    ...userDefinedVars
+exports.userDefinedVars = new Set();
+exports.allVars = [
+    ...exports.predefinedVars,
+    ...exports.userDefinedVars
 ];
 // Command order
 //  - !Read         | read outvar cell1 0
@@ -93,33 +93,33 @@ let allVars = [
 //  - !Unit Radar   | uradar enemy any any distance 0 1 outvar
 //  - !Unit Locate  | ulocate building core true @copper outx outy outvar outvar
 function updateVars(lines) {
-    userDefinedVars = new Set();
+    exports.userDefinedVars = new Set();
     for (let line of lines) {
         const words = line.split(/([\w@-]+|\s+|".*"|'.*')/g).filter(x => (x !== '' && !/^\s*$/.test(x)));
         if (words.length > 0) {
             if (words[0] === 'read')
-                userDefinedVars.add(words[1]);
+                exports.userDefinedVars.add(words[1]);
             else if (words[0] === 'getlink')
-                userDefinedVars.add(words[1]);
+                exports.userDefinedVars.add(words[1]);
             else if (words[0] === 'sensor')
-                userDefinedVars.add(words[1]);
+                exports.userDefinedVars.add(words[1]);
             else if (words[0] === 'set')
-                userDefinedVars.add(words[1]);
+                exports.userDefinedVars.add(words[1]);
             else if (words[0] === 'op')
-                userDefinedVars.add(words[2]);
+                exports.userDefinedVars.add(words[2]);
             else if (words[0] === 'lookup')
-                userDefinedVars.add(words[2]);
+                exports.userDefinedVars.add(words[2]);
             else if (words[0] === 'uradar')
-                userDefinedVars.add(words[5]);
+                exports.userDefinedVars.add(words[5]);
             else if (words[0] === 'ulocate') {
-                userDefinedVars.add(words[7]);
-                userDefinedVars.add(words[8]);
+                exports.userDefinedVars.add(words[7]);
+                exports.userDefinedVars.add(words[8]);
             }
         }
     }
-    allVars = [
-        ...predefinedVars,
-        ...userDefinedVars
+    exports.allVars = [
+        ...exports.predefinedVars,
+        ...exports.userDefinedVars
     ];
 }
 exports.updateVars = updateVars;
@@ -134,23 +134,38 @@ exports.updateVars = updateVars;
 //     'mlog_unknown',   // Unknown tokens
 // ];
 // tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
-//
-// const tokenModifiersLegend = [
-//     'mlog_readonly', // Built-in constants
-//     'mlog_invalid',  // Invalid parameter type or syntax
-//     'mlog_unknown',  // Unknown parameter but correct type
-// ];
-function identifyType(text, index = undefined, expectingValue = false, expectingKeyword = false) {
+function identifyType(text, index = undefined, expectingKeyword = false) {
     if (index == 0)
         return "mlog_method";
+    else if (text.startsWith("#"))
+        return "mlog_comment";
     if (text.startsWith("\"") || text.startsWith("'") && text.endsWith(text.substring(0, 1)))
         return "mlog_string";
     else if (/^\d+$/.test(text))
         return "mlog_number";
-    else if (allVars.find(v => v === text))
+    else if (exports.allVars.find(v => v === text))
         return "mlog_variable";
+    else if (/^[^0-9].*$/.test(text))
+        return expectingKeyword ? "mlog_keyword" : "mlog_parameter";
     else
-        return expectingValue ? "mlog_variable" : expectingKeyword ? "mlog_keyword" : "mlog_parameter";
+        return "mlog_unknown";
 }
 exports.identifyType = identifyType;
+// const tokenModifiersLegend = [
+//     'readonly', // Built-in constants
+//     'mlog_invalid',  // Invalid parameter type or syntax
+//     'mlog_unknown',  // Unknown parameter but correct type
+// ];
+function identifyModifiers(text, expectedTypes, index, expectingKeyword = false) {
+    let modifiers = [];
+    let type = identifyType(text, index, expectingKeyword);
+    if (exports.allPredefines.find(v => v === text))
+        modifiers.push("readonly");
+    if (expectedTypes.find(v => v === type) == undefined)
+        modifiers.push("mlog_invalid");
+    if (type === "mlog_unknown")
+        modifiers.push("mlog_unknown");
+    return modifiers;
+}
+exports.identifyModifiers = identifyModifiers;
 //# sourceMappingURL=globals.js.map

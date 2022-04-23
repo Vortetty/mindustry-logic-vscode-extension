@@ -14,7 +14,7 @@ async function writeParser(lineNum, words, line, lines) {
             tokenType = 'mlog_method';
         else
             tokenType = (0, globals_1.identifyType)(token);
-        let _tokenModifiers = [];
+        let _tokenModifiers = [...(0, globals_1.identifyModifiers)(token, [tokenType], i)];
         if (i == 2 && !/^cell\d+$/.test(token))
             _tokenModifiers.push('mlog_invalid');
         else if (i == 3 && !/^\d+$/.test(token))

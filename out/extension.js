@@ -127,7 +127,7 @@ const legend = (function () {
     ];
     tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
     const tokenModifiersLegend = [
-        'mlog_readonly',
+        'readonly',
         'mlog_invalid',
         'mlog_unknown', // Unknown parameter but correct type
     ];
@@ -209,7 +209,7 @@ let commands = new Map();
 //  - Unit Control  | ucontrol approach 0 0 0 0 0
 //  - !Unit Radar   | uradar enemy any any distance 0 1 outvar
 //  - !Unit Locate  | ulocate building core true @copper outx outy outvar outvar
-// 
+//
 // prefix `!` means it defines a new variable or modifies a new variable
 const __internal_unknown_instruction_1 = require("./parsers/__internal_unknown_instruction");
 const read_1 = require("./parsers/read");

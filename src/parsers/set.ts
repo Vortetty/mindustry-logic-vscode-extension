@@ -1,4 +1,4 @@
-import { identifyType, IParsedToken } from './globals';
+import { identifyType, identifyModifiers, IParsedToken } from './globals';
 
 export async function setParser(lineNum: number, words: string[], line: string, lines: string[]): Promise<IParsedToken[]> {
     let tokens: IParsedToken[] = [];
@@ -12,9 +12,10 @@ export async function setParser(lineNum: number, words: string[], line: string, 
         let tokenType = '';
         if (i == 0)      tokenType = 'mlog_method';
         else if (i == 1) tokenType = 'mlog_variable';
-        else 		     tokenType = identifyType(token);
+        else             tokenType = identifyType(token);
 
-        let _tokenModifiers: string[] = i > 2 ? ['invalid'] : [];
+        let _tokenModifiers: string[] = [...identifyModifiers(token, [tokenType], i)];
+        if (i > 2) _tokenModifiers.push('mlog_invalid');
 
         tokens.push(
             {

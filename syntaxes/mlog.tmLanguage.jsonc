@@ -1,75 +1,75 @@
 {
-	"fileTypes": [
-	  "mlog",
-	  "masm"
-	],
-	"name": "mlog",
-	"patterns": [
-	  {
-		"include": "#main"
-	  }
-	],
-	"madeBy": "vortetty",
-	"scopeName": "source.mlog",
-	"uuid": "e6b24046-e851-44fd-9ab8-98020c378731",
-	"repository": {
-	  "main": {
-		"patterns": [
-		  {
-			"match": "^(?!(\\b(read|write|draw|print|drawflush|printflush|getlink|control|radar|sensor|set|op|end|jump|noop)\\b)).*$",
-			"name": "invalid"
-		  },
-		  {
-			"match": "(\\b(read|write|draw|print|drawflush|printflush|getlink|control|radar|sensor|set|op|end|jump|noop)\\b)",
-			"name": "keyword.control"
-		  },
-		  {
-			"match": "\\d+",
-			"name": "string"
-		  },
-		  {
-			"match": "(\\w)+(\\d)",
-			"name": "variable.parameter"
-		  },
-		  {
-			"match": "(?<=(\\w+\\s){1})([^\\d\\W]+)",
-			"name": "variable.parameter"
-		  },
-		  {
-			"match": "#.*$",
-			"name": "punctuation.definition.comment"
-		  },
-		  {
-			"begin": "(\\@)",
-			"beginCaptures": {
-			  "1": {
-				"name": "punctuation.definition.comment"
-			  }
-			},
-			"contentName": "text.html.markdown markup.inline.raw.markdown",
-			"end": "(\\s|$)",
-			"endCaptures": {
-			  "1": {
-				"name": "punctuation.definition.comment"
-			  }
-			}
-		  },
-		  {
-			"begin": "(\\\")",
-			"beginCaptures": {
-			  "1": {
-				"name": "punctuation.definition.comment"
-			  }
-			},
-			"contentName": "text.html.markdown markup.inline.raw.markdown",
-			"end": "(\\\")",
-			"endCaptures": {
-			  "1": {
-				"name": "punctuation.definition.comment"
-			  }
-			}
-		  }
-		]
-	  }
-	}
+    "fileTypes": [
+      "mlog",
+      "masm"
+    ],
+    "name": "mlog",
+    "patterns": [
+      {
+        "include": "#main"
+      }
+    ],
+    "madeBy": "vortetty",
+    "scopeName": "source.mlog",
+    "uuid": "e6b24046-e851-44fd-9ab8-98020c378731",
+    "repository": {
+      "main": {
+        "patterns": [
+          {
+            "match": "^(?!(\\b(read|write|draw|print|drawflush|printflush|getlink|control|radar|sensor|set|op|end|jump|noop)\\b)).*$",
+            "name": "invalid"
+          },
+          {
+            "match": "(\\b(read|write|draw|print|drawflush|printflush|getlink|control|radar|sensor|set|op|end|jump|noop)\\b)",
+            "name": "keyword.control"
+          },
+          {
+            "match": "\\d+",
+            "name": "string"
+          },
+          {
+            "match": "(\\w)+(\\d)",
+            "name": "variable.parameter"
+          },
+          {
+            "match": "(?<=(\\w+\\s){1})([^\\d\\W]+)",
+            "name": "variable.parameter"
+          },
+          {
+            "match": "#.*$",
+            "name": "punctuation.definition.comment"
+          },
+          {
+            "begin": "(\\@)",
+            "beginCaptures": {
+              "1": {
+                "name": "punctuation.definition.comment"
+              }
+            },
+            "contentName": "text.html.markdown markup.inline.raw.markdown",
+            "end": "(\\s|$)",
+            "endCaptures": {
+              "1": {
+                "name": "punctuation.definition.comment"
+              }
+            }
+          },
+          {
+            "begin": "(\\\")",
+            "beginCaptures": {
+              "1": {
+                "name": "punctuation.definition.comment"
+              }
+            },
+            "contentName": "text.html.markdown markup.inline.raw.markdown",
+            "end": "(\\\")",
+            "endCaptures": {
+              "1": {
+                "name": "punctuation.definition.comment"
+              }
+            }
+          }
+        ]
+      }
+    }
   }

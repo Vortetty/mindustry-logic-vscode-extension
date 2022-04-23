@@ -16,11 +16,11 @@
 #define IO_H
 #include "c2logic/builtins.h"
 void println(char* s) {
-	print(s);
-	print("\n");
+    print(s);
+    print("\n");
 }
 void printdln(double s) {
-	printd(s);
-	print("\n");
+    printd(s);
+    print("\n");
 }
 #endif

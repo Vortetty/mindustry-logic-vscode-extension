@@ -84,16 +84,11 @@
         ],
         "semanticTokenModifiers": [
             {
-                "id": "mlog_readonly",
-                "superType": "readonly",
-                "description": "Built-in constants"
-            },
-            {
                 "id": "mlog_invalid",
                 "description": "Invalid parameter type or syntax"
             },
             {
-                "id": "unknown",
+                "id": "mlog_unknown",
                 "description": "Unknown parameter but correct type"
             }
         ],

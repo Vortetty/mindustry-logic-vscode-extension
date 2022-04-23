@@ -21,7 +21,7 @@ void printd(double s);
 void printflush(struct MindustryObject message);
 
 struct MindustryObject radar(struct MindustryObject obj, char* target1, char* target2,
-							 char* target3, char* sort, double index);
+                             char* target3, char* sort, double index);
 double sensor(struct MindustryObject obj, char* prop);
 void enable(struct MindustryObject obj, double enabled);
 void shoot(struct MindustryObject obj, double x, double y, double shoot);

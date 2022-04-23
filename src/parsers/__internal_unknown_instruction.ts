@@ -1,4 +1,4 @@
-import { identifyType, IParsedToken } from './globals';
+import { identifyModifiers, identifyType, IParsedToken } from './globals';
 
 export async function __internal_unknown_instructionParser(lineNum: number, words: string[], line: string, lines: string[]): Promise<IParsedToken[]> {
     let tokens: IParsedToken[] = [];
@@ -11,9 +11,9 @@ export async function __internal_unknown_instructionParser(lineNum: number, word
 
         let tokenType = '';
         if (i == 0)      tokenType = 'mlog_method';
-        else 		     tokenType = identifyType(token);
+        else             tokenType = identifyType(token);
 
-        let _tokenModifiers: string[] = ['unknown'];
+        let _tokenModifiers: string[] = ['unknown', ...identifyModifiers(token, [tokenType], i)];
 
         tokens.push(
             {
