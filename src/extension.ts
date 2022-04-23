@@ -129,7 +129,7 @@ function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(createIncludes);
 
     // Semantic tokens
-    context.subscriptions.push(vscode.languages.registerDocumentSemanticTokensProvider({ language: 'mlog'}, new DocumentSemanticTokensProvider(), legend));
+    context.subscriptions.push(vscode.languages.registerDocumentSemanticTokensProvider({language: 'mlog'}, new DocumentSemanticTokensProvider(), legend));
 }
 
 function deactivate() {}
