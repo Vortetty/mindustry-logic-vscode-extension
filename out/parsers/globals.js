@@ -1,21 +1,4 @@
 "use strict";
-// const tokenTypesLegend = [
-//     'mlog_method',    // Instructions (e.g. sensor, op, etc.)
-//     'mlog_keyword',   // Keywords (e.g. pwr, xor, etc.)
-//     'mlog_parameter', // Parameters (e.g. node1)
-//     'mlog_variable',  // Variables set by user, also built-in constants
-//     'mlog_string',    // Strings (e.g. "Hello World")
-//     'mlog_number',    // Numbers (e.g. 123, -123, 0.123)
-//     'mlog_comment',   // Comments (e.g. # <comment text>)
-//     'mlog_unknown',   // Unknown tokens
-// ];
-// tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
-//
-// const tokenModifiersLegend = [
-//     'mlog_readonly', // Built-in constants
-//     'mlog_invalid',  // Invalid parameter type or syntax
-//     'mlog_unknown',  // Unknown parameter but correct type
-// ];
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.identifyType = exports.updateVars = void 0;
 let validBlocks = [
@@ -140,19 +123,34 @@ function updateVars(lines) {
     ];
 }
 exports.updateVars = updateVars;
-function identifyType(text, expectingValue = false) {
-    if (text.startsWith("\"") || text.startsWith("'") && text.endsWith(text.substring(0, 1))) {
+// const tokenTypesLegend = [
+//     'mlog_method',    // Instructions (e.g. sensor, op, etc.)
+//     'mlog_keyword',   // Keywords (e.g. pwr, xor, etc.)
+//     'mlog_parameter', // Parameters (e.g. node1)
+//     'mlog_variable',  // Variables set by user, also built-in constants
+//     'mlog_string',    // Strings (e.g. "Hello World")
+//     'mlog_number',    // Numbers (e.g. 123, -123, 0.123)
+//     'mlog_comment',   // Comments (e.g. # <comment text>)
+//     'mlog_unknown',   // Unknown tokens
+// ];
+// tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
+//
+// const tokenModifiersLegend = [
+//     'mlog_readonly', // Built-in constants
+//     'mlog_invalid',  // Invalid parameter type or syntax
+//     'mlog_unknown',  // Unknown parameter but correct type
+// ];
+function identifyType(text, index = undefined, expectingValue = false, expectingKeyword = false) {
+    if (index == 0)
+        return "mlog_method";
+    if (text.startsWith("\"") || text.startsWith("'") && text.endsWith(text.substring(0, 1)))
         return "mlog_string";
-    }
-    else if (/^\d+$/.test(text)) {
+    else if (/^\d+$/.test(text))
         return "mlog_number";
-    }
-    else if (allVars.find(v => v === text)) {
+    else if (allVars.find(v => v === text))
         return "mlog_variable";
-    }
-    else {
-        return expectingValue ? "mlog_variable" : "mlog_parameter";
-    }
+    else
+        return expectingValue ? "mlog_variable" : expectingKeyword ? "mlog_keyword" : "mlog_parameter";
 }
 exports.identifyType = identifyType;
 //# sourceMappingURL=globals.js.map

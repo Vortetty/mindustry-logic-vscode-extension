@@ -139,9 +139,9 @@ module.exports = {
 	deactivate
 }
 
-// 
+//
 // Semantic highlighting
-// 
+//
 
 const tokenTypes = new Map<string, number>();
 const tokenModifiers = new Map<string, number>();
@@ -249,12 +249,14 @@ let commands: Map<string, (lineNum: number, words: string[], line: string, lines
 //  - Unit Control  | ucontrol approach 0 0 0 0 0
 //  - !Unit Radar   | uradar enemy any any distance 0 1 outvar
 //  - !Unit Locate  | ulocate building core true @copper outx outy outvar outvar
+// 
+// prefix `!` means it defines a new variable or modifies a new variable
 
 import { __internal_unknown_instructionParser } from './parsers/__internal_unknown_instruction';
 
 import { readParser } from './parsers/read';
 import { writeParser } from './parsers/write';
-//import { drawParser } from './parsers/draw';
+import { drawParser } from './parsers/draw';
 //import { printParser } from './parsers/print';
 //import { drawflushParser } from './parsers/drawflush';
 //import { printflushParser } from './parsers/printflush';
@@ -279,7 +281,7 @@ commands.set("__internal_unknown_instruction", __internal_unknown_instructionPar
 
 commands.set("read",  readParser);
 commands.set("write", writeParser);
-//commands.set("draw",  drawParser);
+commands.set("draw",  drawParser);
 //commands.set("print", printParser);
 //commands.set("drawflush", drawflushParser);
 //commands.set("printflush", printflushParser);

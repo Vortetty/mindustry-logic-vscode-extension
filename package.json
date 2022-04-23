@@ -46,18 +46,56 @@
             }
         ],
         "semanticTokenTypes": [
-            { "id": "mlog_method",    "superType": "method",    "description": "Instructions (e.g. sensor, op, etc.)" },
-            { "id": "mlog_keyword",   "superType": "keyword",   "description": "Keywords (e.g. pwr, xor, etc.)" },
-            { "id": "mlog_parameter", "superType": "parameter", "description": "Parameters (e.g. node1)" },
-            { "id": "mlog_variable",  "superType": "variable",  "description": "Variables set by user, also built-in constants" },
-            { "id": "mlog_string",    "superType": "string",    "description": "Strings (e.g. \"Hello World\", 'Hello World')" },
-            { "id": "mlog_number",    "superType": "number",    "description": "Numbers (e.g. 123, -123, 0.123)" },
-            { "id": "mlog_comment",   "superType": "comment",   "description": "Comments (e.g. # <comment text>)" }
+            {
+                "id": "mlog_method",
+                "superType": "method",
+                "description": "Instructions (e.g. sensor, op, etc.)"
+            },
+            {
+                "id": "mlog_keyword",
+                "superType": "keyword",
+                "description": "Keywords (e.g. pwr, xor, etc.)"
+            },
+            {
+                "id": "mlog_parameter",
+                "superType": "parameter",
+                "description": "Parameters (e.g. node1)"
+            },
+            {
+                "id": "mlog_variable",
+                "superType": "variable",
+                "description": "Variables set by user, also built-in constants"
+            },
+            {
+                "id": "mlog_string",
+                "superType": "string",
+                "description": "Strings (e.g. \"Hello World\", 'Hello World')"
+            },
+            {
+                "id": "mlog_number",
+                "superType": "number",
+                "description": "Numbers (e.g. 123, -123, 0.123)"
+            },
+            {
+                "id": "mlog_comment",
+                "superType": "comment",
+                "description": "Comments (e.g. # <comment text>)"
+            }
         ],
         "semanticTokenModifiers": [
-            { "id": "mlog_readonly", "superType": "readonly", "description": "Built-in constants" },
-            { "id": "mlog_invalid",                           "description": "Invalid parameter type or syntax" },
-            { "id": "unknown",                                "description": "Unknown parameter but correct type" }
+            {
+                "id": "mlog_readonly",
+                "superType": "readonly",
+                "description": "Built-in constants"
+            },
+            {
+                "id": "mlog_invalid",
+                "description": "Invalid parameter type or syntax"
+            },
+            {
+                "id": "unknown",
+                "description": "Unknown parameter but correct type"
+            }
         ],
         "commands": [
             {
@@ -118,9 +156,9 @@
         "@types/mocha": "^9.1.0",
         "@types/node": "14.x",
         "@types/vscode": "^1.66.0",
-        "@vscode/test-electron": "^2.1.3",
         "@typescript-eslint/eslint-plugin": "^5.19.0",
         "@typescript-eslint/parser": "^5.19.0",
+        "@vscode/test-electron": "^2.1.3",
         "eslint": "^8.11.0",
         "glob": "^7.2.0",
         "mocha": "^9.2.2",

@@ -109,9 +109,9 @@ module.exports = {
     activate,
     deactivate
 };
-// 
+//
 // Semantic highlighting
-// 
+//
 const tokenTypes = new Map();
 const tokenModifiers = new Map();
 const legend = (function () {
@@ -209,10 +209,12 @@ let commands = new Map();
 //  - Unit Control  | ucontrol approach 0 0 0 0 0
 //  - !Unit Radar   | uradar enemy any any distance 0 1 outvar
 //  - !Unit Locate  | ulocate building core true @copper outx outy outvar outvar
+// 
+// prefix `!` means it defines a new variable or modifies a new variable
 const __internal_unknown_instruction_1 = require("./parsers/__internal_unknown_instruction");
 const read_1 = require("./parsers/read");
 const write_1 = require("./parsers/write");
-//import { drawParser } from './parsers/draw';
+const draw_1 = require("./parsers/draw");
 //import { printParser } from './parsers/print';
 //import { drawflushParser } from './parsers/drawflush';
 //import { printflushParser } from './parsers/printflush';
@@ -233,7 +235,7 @@ const set_1 = require("./parsers/set");
 commands.set("__internal_unknown_instruction", __internal_unknown_instruction_1.__internal_unknown_instructionParser);
 commands.set("read", read_1.readParser);
 commands.set("write", write_1.writeParser);
-//commands.set("draw",  drawParser);
+commands.set("draw", draw_1.drawParser);
 //commands.set("print", printParser);
 //commands.set("drawflush", drawflushParser);
 //commands.set("printflush", printflushParser);

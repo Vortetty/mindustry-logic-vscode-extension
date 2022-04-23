@@ -6,7 +6,9 @@ Mindustry logic highlighting + C to MLOG compiler
 
 ### Highlighting
 
-Highlights MLOG in the editor, will show if a parameter is invalid and if a command is unknown
+Highlights MLOG in the editor.
+
+Semantic highlighting __must__ be enabled, it enables this for the language by default so you'd have to go out of your way to disable it but it does need enabled for this to work.
 
 ### Compilation
 
