@@ -2,8 +2,8 @@
     "name": "mindustry-logic",
     "publisher": "vortetty",
     "displayName": "Mindustry Logic",
-    "description": "Mindustry logic assembly highlighting + (incomplete) Compiler [(made by Superstormer)](https://github.com/SuperStormer/c2logic)",
-    "version": "2.1.0",
+    "description": "Mindustry logic assembly highlighting + (incomplete) Compiler (made by Superstormer)",
+    "version": "2.1.2",
     "license": "Apache 2.0",
     "repository": {
         "type": "git",
@@ -31,6 +31,13 @@
                 "editor.semanticHighlighting.enabled": true
             }
         },
+        "grammars": [
+          {
+            "language": "mlog",
+            "scopeName": "source.mlog",
+            "path": "./syntaxes/mlog_themefix_placeholder.tmGrammar.json"
+          }
+        ],
         "languages": [
             {
                 "id": "mlog",

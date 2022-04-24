@@ -1,0 +1,24 @@
+{
+    "fileTypes": [
+      "mlog",
+      "masm"
+    ],
+    "name": "mlog",
+    "patterns": [
+      {
+        "include": "#main"
+      }
+    ],
+    "madeBy": "vortetty",
+    "scopeName": "source.mlog",
+    "uuid": "e6b24046-e851-44fd-9ab8-98020c378731",
+    "repository": {
+      "main": {
+        "patterns": [
+          {
+            "match": "[\\s\\S]+"
+          }
+        ]
+      }
+    }
+  }
