@@ -2,13 +2,42 @@
 
 Mindustry logic highlighting + C to MLOG compiler
 
+___Read [known issues](#known-issues) before filing a bug report___
+
 ## Features
 
 ### Highlighting
 
 Highlights MLOG in the editor.
 
-Semantic highlighting __must__ be enabled, it enables this for the language by default so you'd have to go out of your way to disable it but it does need enabled for this to work.
+Semantic highlighting ___must___ be enabled, it enables this for the language by default so you'd have to go out of your way to disable it but it does need enabled for this to work.
+
+it's a slight WIP still
+
+#### Currently implemented highlighting
+
+- 🗹 `read`
+- 🗹 `write`
+- ☐ `draw`
+- 🗹 `print`
+- 🗹 `drawflush`
+- 🗹 `printflush`
+- ☐ `getlink`
+- ☐ `control`
+- ☐ `radar`
+- ☐ `sensor`
+- 🗹 `set`
+- ☐ `op`
+- ☐ `wait`
+- ☐ `lookup`
+- ☐ `end`
+- ☐ `jump`
+- ☐ `ubind`
+- ☐ `ucontrol`
+- ☐ `uradar`
+- ☐ `ulocate`
+
+all others are being worked on and for now use generic highlighting code.
 
 ### Compilation
 

@@ -3,7 +3,7 @@
     "publisher": "vortetty",
     "displayName": "Mindustry Logic",
     "description": "Mindustry logic assembly highlighting + (incomplete) Compiler (made by Superstormer)",
-    "version": "2.1.2",
+    "version": "2.1.6",
     "license": "Apache 2.0",
     "repository": {
         "type": "git",

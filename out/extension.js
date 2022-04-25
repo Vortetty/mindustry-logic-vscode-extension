@@ -102,11 +102,24 @@ function activate(context) {
     });
     context.subscriptions.push(createIncludes);
     // Semantic tokens
-    tokenProviderDeactivate = vscode.languages.registerDocumentSemanticTokensProvider({ language: 'mlog' }, new DocumentSemanticTokensProvider(), legend);
+    let tokenProviderDeactivate = vscode.languages.registerDocumentSemanticTokensProvider({ language: 'mlog' }, new DocumentSemanticTokensProvider(), legend);
     context.subscriptions.push(tokenProviderDeactivate);
+    let config = vscode.workspace.getConfiguration();
+    let oldColorConfig = config.get("editor.semanticTokenColorCustomizations", {});
+    oldColorConfig["enabled"] = true;
+    oldColorConfig["rules"] = {
+        "*.mlog_invalid:mlog": {
+            "fontStyle": "underline",
+            "foreground": "#F72343"
+        },
+        "*.mlog_unknown:mlog": {
+            "fontStyle": "underline italic",
+        },
+        ...oldColorConfig["rules"]
+    };
+    config.update("editor.semanticTokenColorCustomizations", oldColorConfig, vscode.ConfigurationTarget.Global);
 }
 function deactivate() { }
-let tokenProviderDeactivate;
 module.exports = {
     activate,
     deactivate
@@ -166,8 +179,25 @@ class DocumentSemanticTokensProvider {
         const lines = text.split(/\r\n|\r|\n/);
         (0, globals_1.updateVars)(lines);
         for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            const words = line.split(/([\w@-]+|\s+|".*"|'.*')/g).filter(x => x !== '');
+            let line = lines[i];
+            let words = line.split(/([^\S\s]+|\s+|"[^\S\s]*"|'[^\S\s]*')/g).filter(x => x !== '');
+            let comments = [];
+            for (let j = 0; j < words.length; j++) {
+                if (words[j].startsWith("#")) {
+                    comments = words.slice(j);
+                    words = words.slice(0, j);
+                    line = line.substring(0, words.join("").length);
+                    break;
+                }
+            }
+            let tmpOffset = words.join("").length;
+            r.push({
+                line: i,
+                startCharacter: tmpOffset,
+                length: comments.join("").length,
+                tokenType: 'mlog_comment',
+                tokenModifiers: []
+            });
             if (commands.get(words[0]) != undefined) {
                 (await commands.get(words[0])(i, words, line, lines)).forEach((token) => {
                     r.push(token);
@@ -216,11 +246,11 @@ let commands = new Map();
 const __internal_unknown_instruction_1 = require("./parsers/__internal_unknown_instruction");
 const read_1 = require("./parsers/read");
 const write_1 = require("./parsers/write");
-const draw_1 = require("./parsers/draw");
-//import { printParser } from './parsers/print';
-//import { drawflushParser } from './parsers/drawflush';
-//import { printflushParser } from './parsers/printflush';
-//import { getlinkParser } from './parsers/getlink';
+//import { drawParser } from './parsers/draw';
+const print_1 = require("./parsers/print");
+const drawflush_1 = require("./parsers/drawflush");
+const printflush_1 = require("./parsers/printflush");
+const getlink_1 = require("./parsers/getlink");
 //import { controlParser } from './parsers/control';
 //import { radarParser } from './parsers/radar';
 //import { sensorParser } from './parsers/sensor';
@@ -237,11 +267,11 @@ const set_1 = require("./parsers/set");
 commands.set("__internal_unknown_instruction", __internal_unknown_instruction_1.__internal_unknown_instructionParser);
 commands.set("read", read_1.readParser);
 commands.set("write", write_1.writeParser);
-commands.set("draw", draw_1.drawParser);
-//commands.set("print", printParser);
-//commands.set("drawflush", drawflushParser);
-//commands.set("printflush", printflushParser);
-//commands.set("getlink", getlinkParser);
+//commands.set("draw",  drawParser);
+commands.set("print", print_1.printParser);
+commands.set("drawflush", drawflush_1.drawflushParser);
+commands.set("printflush", printflush_1.printflushParser);
+commands.set("getlink", getlink_1.getlinkParser);
 //commands.set("control", controlParser);
 //commands.set("radar", radarParser);
 //commands.set("sensor", sensorParser);

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readParser = void 0;
 const globals_1 = require("./globals");
+let expected_token_count = 4;
 async function readParser(lineNum, words, line, lines) {
     let tokens = [];
     let offset = 0;
@@ -14,7 +15,7 @@ async function readParser(lineNum, words, line, lines) {
             tokenType = 'mlog_method';
         else
             tokenType = (0, globals_1.identifyType)(token);
-        let _tokenModifiers = [...(0, globals_1.identifyModifiers)(token, [tokenType], i)];
+        let _tokenModifiers = [...(0, globals_1.identifyModifiers)(token, [tokenType], i, expected_token_count)];
         if (i == 2 && !/^cell\d+$/.test(token))
             _tokenModifiers.push('mlog_invalid');
         else if (i == 3 && !/^\d+$/.test(token))
@@ -22,7 +23,7 @@ async function readParser(lineNum, words, line, lines) {
         tokens.push({
             line: lineNum,
             startCharacter: offset,
-            length: token.length,
+            length: token.length + spaces,
             tokenType: tokenType,
             tokenModifiers: _tokenModifiers
         });

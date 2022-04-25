@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeParser = void 0;
+exports.printParser = void 0;
 const globals_1 = require("./globals");
-let expected_token_count = 4;
-async function writeParser(lineNum, words, line, lines) {
+let expected_token_count = 2;
+async function printParser(lineNum, words, line, lines) {
     let tokens = [];
     let offset = 0;
     let parsedWords = 0;
@@ -16,10 +16,6 @@ async function writeParser(lineNum, words, line, lines) {
         else
             tokenType = (0, globals_1.identifyType)(token);
         let _tokenModifiers = [...(0, globals_1.identifyModifiers)(token, [tokenType], i, expected_token_count)];
-        if (i == 2 && !/^cell\d+$/.test(token))
-            _tokenModifiers.push('mlog_invalid');
-        else if (i == 3 && !/^\d+$/.test(token))
-            _tokenModifiers.push('mlog_invalid');
         tokens.push({
             line: lineNum,
             startCharacter: offset,
@@ -32,5 +28,5 @@ async function writeParser(lineNum, words, line, lines) {
     }
     return tokens;
 }
-exports.writeParser = writeParser;
-//# sourceMappingURL=write.js.map
+exports.printParser = printParser;
+//# sourceMappingURL=print.js.map

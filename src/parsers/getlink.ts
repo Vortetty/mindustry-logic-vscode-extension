@@ -1,6 +1,8 @@
-import { identifyModifiers, identifyType, IParsedToken } from './globals';
+import { identifyType, identifyModifiers, IParsedToken } from './globals';
 
-export async function __internal_unknown_instructionParser(lineNum: number, words: string[], line: string, lines: string[]): Promise<IParsedToken[]> {
+let expected_token_count = 3;
+
+export async function getlinkParser(lineNum: number, words: string[], line: string, lines: string[]): Promise<IParsedToken[]> {
     let tokens: IParsedToken[] = [];
     let offset = 0;
     let parsedWords = 0;
@@ -13,7 +15,8 @@ export async function __internal_unknown_instructionParser(lineNum: number, word
         if (i == 0)      tokenType = 'mlog_method';
         else             tokenType = identifyType(token);
 
-        let _tokenModifiers: string[] = ['unknown', ...identifyModifiers(token, [tokenType], i, -1)];
+        let _tokenModifiers: string[] = [...identifyModifiers(token, [tokenType], i, expected_token_count)];
+        if (i == 2 && !/^\d+$/.test(token)) _tokenModifiers.push('mlog_invalid');
 
         tokens.push(
             {

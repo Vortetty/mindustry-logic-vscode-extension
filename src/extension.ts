@@ -131,6 +131,21 @@ function activate(context: vscode.ExtensionContext) {
     // Semantic tokens
     let tokenProviderDeactivate = vscode.languages.registerDocumentSemanticTokensProvider({language: 'mlog'}, new DocumentSemanticTokensProvider(), legend);
     context.subscriptions.push(tokenProviderDeactivate);
+
+    let config = vscode.workspace.getConfiguration();
+    let oldColorConfig: Record<string, unknown> = config.get("editor.semanticTokenColorCustomizations", {});
+    oldColorConfig["enabled"] = true;
+    oldColorConfig["rules"] = {
+        "*.mlog_invalid:mlog": {
+            "fontStyle": "underline",
+            "foreground": "#F72343"
+        },
+        "*.mlog_unknown:mlog": {
+            "fontStyle": "underline italic",
+        },
+        ...(oldColorConfig["rules"] as Record<string, unknown>)
+    };
+    config.update("editor.semanticTokenColorCustomizations", oldColorConfig, vscode.ConfigurationTarget.Global);
 }
 
 function deactivate() {}
@@ -202,8 +217,27 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
         const lines = text.split(/\r\n|\r|\n/);
         updateVars(lines);
         for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            const words = line.split(/([\w@-]+|\s+|".*"|'.*')/g).filter(x => x !== '');
+            let line: string = lines[i];
+            let words: string[] = line.split(/([^\S\s]+|\s+|"[^\S\s]*"|'[^\S\s]*')/g).filter(x => x !== '');
+            let comments: string[] = [];
+
+            for (let j = 0; j < words.length; j++) {
+                if (words[j].startsWith("#")) {
+                    comments = words.slice(j);
+                    words = words.slice(0, j);
+                    line = line.substring(0, words.join("").length);
+                    break;
+                }
+            }
+
+            let tmpOffset = words.join("").length;
+            r.push({
+                line: i,
+                startCharacter: tmpOffset,
+                length: comments.join("").length,
+                tokenType: 'mlog_comment',
+                tokenModifiers: []
+            });
 
             if (commands.get(words[0]) != undefined) {
                 (await commands.get(words[0])!(i, words, line, lines)).forEach((token) => {
@@ -257,11 +291,11 @@ import { __internal_unknown_instructionParser } from './parsers/__internal_unkno
 
 import { readParser } from './parsers/read';
 import { writeParser } from './parsers/write';
-import { drawParser } from './parsers/draw';
-//import { printParser } from './parsers/print';
-//import { drawflushParser } from './parsers/drawflush';
-//import { printflushParser } from './parsers/printflush';
-//import { getlinkParser } from './parsers/getlink';
+//import { drawParser } from './parsers/draw';
+import { printParser } from './parsers/print';
+import { drawflushParser } from './parsers/drawflush';
+import { printflushParser } from './parsers/printflush';
+import { getlinkParser } from './parsers/getlink';
 //import { controlParser } from './parsers/control';
 //import { radarParser } from './parsers/radar';
 //import { sensorParser } from './parsers/sensor';
@@ -282,11 +316,11 @@ commands.set("__internal_unknown_instruction", __internal_unknown_instructionPar
 
 commands.set("read",  readParser);
 commands.set("write", writeParser);
-commands.set("draw",  drawParser);
-//commands.set("print", printParser);
-//commands.set("drawflush", drawflushParser);
-//commands.set("printflush", printflushParser);
-//commands.set("getlink", getlinkParser);
+//commands.set("draw",  drawParser);
+commands.set("print", printParser);
+commands.set("drawflush", drawflushParser);
+commands.set("printflush", printflushParser);
+commands.set("getlink", getlinkParser);
 //commands.set("control", controlParser);
 //commands.set("radar", radarParser);
 //commands.set("sensor", sensorParser);

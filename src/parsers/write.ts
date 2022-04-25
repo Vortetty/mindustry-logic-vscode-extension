@@ -1,5 +1,7 @@
 import { identifyType, identifyModifiers, IParsedToken } from './globals';
 
+let expected_token_count = 4;
+
 export async function writeParser(lineNum: number, words: string[], line: string, lines: string[]): Promise<IParsedToken[]> {
     let tokens: IParsedToken[] = [];
     let offset = 0;
@@ -13,7 +15,7 @@ export async function writeParser(lineNum: number, words: string[], line: string
         if (i == 0)      tokenType = 'mlog_method';
         else             tokenType = identifyType(token);
 
-        let _tokenModifiers: string[] = [...identifyModifiers(token, [tokenType], i)];
+        let _tokenModifiers: string[] = [...identifyModifiers(token, [tokenType], i, expected_token_count)];
         if (i == 2 && !/^cell\d+$/.test(token)) _tokenModifiers.push('mlog_invalid');
         else if (i == 3 && !/^\d+$/.test(token)) _tokenModifiers.push('mlog_invalid');
 
@@ -21,7 +23,7 @@ export async function writeParser(lineNum: number, words: string[], line: string
             {
                 line: lineNum,
                 startCharacter: offset,
-                length: token.length,
+                length: token.length+spaces,
                 tokenType: tokenType,
                 tokenModifiers: _tokenModifiers
             }

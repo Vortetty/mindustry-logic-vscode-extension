@@ -14,11 +14,11 @@ async function __internal_unknown_instructionParser(lineNum, words, line, lines)
             tokenType = 'mlog_method';
         else
             tokenType = (0, globals_1.identifyType)(token);
-        let _tokenModifiers = ['unknown', ...(0, globals_1.identifyModifiers)(token, [tokenType], i)];
+        let _tokenModifiers = ['unknown', ...(0, globals_1.identifyModifiers)(token, [tokenType], i, -1)];
         tokens.push({
             line: lineNum,
             startCharacter: offset,
-            length: token.length,
+            length: token.length + spaces,
             tokenType: tokenType,
             tokenModifiers: _tokenModifiers
         });

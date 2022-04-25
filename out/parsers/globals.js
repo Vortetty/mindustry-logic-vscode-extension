@@ -156,16 +156,18 @@ exports.identifyType = identifyType;
 //     'mlog_invalid',  // Invalid parameter type or syntax
 //     'mlog_unknown',  // Unknown parameter but correct type
 // ];
-function identifyModifiers(text, expectedTypes, index, expectingKeyword = false) {
-    let modifiers = [];
+function identifyModifiers(text, expectedTypes, index, expectedParamCount, expectingKeyword = false) {
+    let modifiers = new Set();
     let type = identifyType(text, index, expectingKeyword);
     if (exports.allPredefines.find(v => v === text))
-        modifiers.push("readonly");
+        modifiers.add("readonly");
     if (expectedTypes.find(v => v === type) == undefined)
-        modifiers.push("mlog_invalid");
+        modifiers.add("mlog_invalid");
     if (type === "mlog_unknown")
-        modifiers.push("mlog_unknown");
-    return modifiers;
+        modifiers.add("mlog_unknown");
+    if (index + 1 > expectedParamCount && expectedParamCount != -1)
+        modifiers.add("mlog_invalid");
+    return [...modifiers];
 }
 exports.identifyModifiers = identifyModifiers;
 //# sourceMappingURL=globals.js.map

@@ -4,17 +4,18 @@ All notable changes to the "mindustry-logic" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## 2.1.0-alpha\<n>
+## 2.1.5
 
-### alpha0
+Mostly complete semantic tokens+highlighting
 
-Beginnings of semantic tokens+highlighting
 ## 2.0.2
 
 Basic highlighting
+
 ## 2.0.1
 
 Nothing, was attempting to fix an issue with the vscode extension search but there's still an issue
+
 ## 2.0.0
 
 Add C to MLOG compilation

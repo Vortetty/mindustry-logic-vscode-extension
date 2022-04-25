@@ -164,15 +164,17 @@ export function identifyType(text: string, index: number|undefined=undefined, ex
 //     'mlog_invalid',  // Invalid parameter type or syntax
 //     'mlog_unknown',  // Unknown parameter but correct type
 // ];
-export function identifyModifiers(text: string, expectedTypes: string[], index: number, expectingKeyword=false): string[] {
-    let modifiers: string[] = [];
+export function identifyModifiers(text: string, expectedTypes: string[], index: number, expectedParamCount: number, expectingKeyword=false): string[] {
+    let modifiers: Set<string> = new Set();
     let type = identifyType(text, index, expectingKeyword);
 
-    if (allPredefines.find(v => v === text))              modifiers.push("readonly");
-    if (expectedTypes.find(v => v === type) == undefined) modifiers.push("mlog_invalid");
-    if (type === "mlog_unknown")                          modifiers.push("mlog_unknown");
+    if (allPredefines.find(v => v === text))                      modifiers.add("readonly");
+    if (expectedTypes.find(v => v === type) == undefined)         modifiers.add("mlog_invalid");
+    if (type === "mlog_unknown")                                  modifiers.add("mlog_unknown");
+    
+    if (index+1 > expectedParamCount && expectedParamCount != -1) modifiers.add("mlog_invalid");
 
-    return modifiers;
+    return [...modifiers];
 }
 
 export interface IParsedToken {
