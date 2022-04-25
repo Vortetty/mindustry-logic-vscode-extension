@@ -14,7 +14,7 @@ async function __internal_unknown_instructionParser(lineNum, words, line, lines)
             tokenType = 'mlog_method';
         else
             tokenType = (0, globals_1.identifyType)(token);
-        let _tokenModifiers = ['unknown', ...(0, globals_1.identifyModifiers)(token, [tokenType], i, -1)];
+        let _tokenModifiers = ['mlog_unknown', ...(0, globals_1.identifyModifiers)(token, [tokenType], i, -1)];
         tokens.push({
             line: lineNum,
             startCharacter: offset,
