@@ -13,10 +13,10 @@ export async function drawflushParser(lineNum: number, words: string[], line: st
 
         let tokenType = '';
         if (i == 0)      tokenType = 'mlog_method';
-        else             tokenType = identifyType(token);
+        else             tokenType = identifyType(token, i, expected_token_count);
 
         let _tokenModifiers: string[] = [...identifyModifiers(token, [tokenType], i, expected_token_count)];
-        if (i == 2 && !/^display\d+$/.test(token)) _tokenModifiers.push('mlog_invalid');
+        //if (i == 2 && !/^display\d+$/.test(token)) _tokenModifiers.push('mlog_invalid');
 
         tokens.push(
             {

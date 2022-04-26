@@ -134,12 +134,14 @@ exports.updateVars = updateVars;
 //     'mlog_unknown',   // Unknown tokens
 // ];
 // tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
-function identifyType(text, index = undefined, expectingKeyword = false) {
+function identifyType(text, index, expectedParamCount, expectingKeyword = false) {
     if (index == 0)
         return "mlog_method";
+    else if (index + 1 > expectedParamCount && expectedParamCount != -1)
+        return "mlog_comment";
     else if (text.startsWith("#"))
         return "mlog_comment";
-    if (text.startsWith("\"") || text.startsWith("'") && text.endsWith(text.substring(0, 1)))
+    else if (text.startsWith("\"") || text.startsWith("'") && text.endsWith(text.substring(0, 1)))
         return "mlog_string";
     else if (/^\d+$/.test(text))
         return "mlog_number";
@@ -158,7 +160,7 @@ exports.identifyType = identifyType;
 // ];
 function identifyModifiers(text, expectedTypes, index, expectedParamCount, expectingKeyword = false) {
     let modifiers = new Set();
-    let type = identifyType(text, index, expectingKeyword);
+    let type = identifyType(text, index, expectedParamCount, expectingKeyword);
     if (exports.allPredefines.find(v => v === text))
         modifiers.add("readonly");
     if (expectedTypes.find(v => v === type) == undefined)
@@ -166,7 +168,7 @@ function identifyModifiers(text, expectedTypes, index, expectedParamCount, expec
     if (type === "mlog_unknown")
         modifiers.add("mlog_unknown");
     if (index + 1 > expectedParamCount && expectedParamCount != -1)
-        modifiers.add("mlog_invalid");
+        modifiers.add("mlog_unknown");
     return [...modifiers];
 }
 exports.identifyModifiers = identifyModifiers;

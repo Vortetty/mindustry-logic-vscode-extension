@@ -14,10 +14,9 @@ export async function setParser(lineNum: number, words: string[], line: string, 
         let tokenType = '';
         if (i == 0)      tokenType = 'mlog_method';
         else if (i == 1) tokenType = 'mlog_variable';
-        else             tokenType = identifyType(token);
+        else             tokenType = identifyType(token, i, expected_token_count);
 
         let _tokenModifiers: string[] = [...identifyModifiers(token, [tokenType], i, expected_token_count)];
-        if (i > 2) _tokenModifiers.push('mlog_invalid');
 
         tokens.push(
             {

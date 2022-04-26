@@ -14,7 +14,7 @@ async function printParser(lineNum, words, line, lines) {
         if (i == 0)
             tokenType = 'mlog_method';
         else
-            tokenType = (0, globals_1.identifyType)(token);
+            tokenType = (0, globals_1.identifyType)(token, i, expected_token_count);
         let _tokenModifiers = [...(0, globals_1.identifyModifiers)(token, [tokenType], i, expected_token_count)];
         tokens.push({
             line: lineNum,

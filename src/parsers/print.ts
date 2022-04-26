@@ -13,7 +13,7 @@ export async function printParser(lineNum: number, words: string[], line: string
 
         let tokenType = '';
         if (i == 0)      tokenType = 'mlog_method';
-        else             tokenType = identifyType(token);
+        else             tokenType = identifyType(token, i, expected_token_count);
 
         let _tokenModifiers: string[] = [...identifyModifiers(token, [tokenType], i, expected_token_count)];
 

@@ -11,7 +11,7 @@ export async function __internal_unknown_instructionParser(lineNum: number, word
 
         let tokenType = '';
         if (i == 0)      tokenType = 'mlog_method';
-        else             tokenType = identifyType(token);
+        else             tokenType = identifyType(token, i, -1);
 
         let _tokenModifiers: string[] = ['mlog_unknown', ...identifyModifiers(token, [tokenType], i, -1)];
 

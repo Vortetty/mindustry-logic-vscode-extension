@@ -149,14 +149,15 @@ export function updateVars(lines: string[]) {
 //     'mlog_unknown',   // Unknown tokens
 // ];
 // tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
-export function identifyType(text: string, index: number|undefined=undefined, expectingKeyword=false): string {
-    if (index == 0)                                                                           return "mlog_method";
-    else if (text.startsWith("#"))                                                            return "mlog_comment";
-    if (text.startsWith("\"") || text.startsWith("'") && text.endsWith(text.substring(0, 1))) return "mlog_string";
-    else if (/^\d+$/.test(text))                                                              return "mlog_number";
-    else if (allVars.find(v => v === text))                                                   return "mlog_variable";
-    else if (/^[^0-9].*$/.test(text))                                                         return expectingKeyword ? "mlog_keyword" :"mlog_parameter";
-    else                                                                                      return "mlog_unknown";
+export function identifyType(text: string, index: number, expectedParamCount: number, expectingKeyword=false): string {
+    if (index == 0)                                                                                return "mlog_method";
+    else if (index+1 > expectedParamCount && expectedParamCount != -1)                             return "mlog_comment";
+    else if (text.startsWith("#"))                                                                 return "mlog_comment";
+    else if (text.startsWith("\"") || text.startsWith("'") && text.endsWith(text.substring(0, 1))) return "mlog_string";
+    else if (/^\d+$/.test(text))                                                                   return "mlog_number";
+    else if (allVars.find(v => v === text))                                                        return "mlog_variable";
+    else if (/^[^0-9].*$/.test(text))                                                              return expectingKeyword ? "mlog_keyword" :"mlog_parameter";
+    else                                                                                           return "mlog_unknown";
 }
 
 // const tokenModifiersLegend = [
@@ -166,13 +167,13 @@ export function identifyType(text: string, index: number|undefined=undefined, ex
 // ];
 export function identifyModifiers(text: string, expectedTypes: string[], index: number, expectedParamCount: number, expectingKeyword=false): string[] {
     let modifiers: Set<string> = new Set();
-    let type = identifyType(text, index, expectingKeyword);
+    let type = identifyType(text, index, expectedParamCount, expectingKeyword);
 
     if (allPredefines.find(v => v === text))                      modifiers.add("readonly");
     if (expectedTypes.find(v => v === type) == undefined)         modifiers.add("mlog_invalid");
     if (type === "mlog_unknown")                                  modifiers.add("mlog_unknown");
-    
-    if (index+1 > expectedParamCount && expectedParamCount != -1) modifiers.add("mlog_invalid");
+
+    if (index+1 > expectedParamCount && expectedParamCount != -1) modifiers.add("mlog_unknown");
 
     return [...modifiers];
 }

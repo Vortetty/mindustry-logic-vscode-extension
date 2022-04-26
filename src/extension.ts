@@ -133,7 +133,7 @@ function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(tokenProviderDeactivate);
 
     let config = vscode.workspace.getConfiguration();
-    let oldColorConfig: Record<string, unknown> = config.get("editor.semanticTokenColorCustomizations", {});
+    let oldColorConfig: Record<string, unknown> = config.inspect("editor.semanticTokenColorCustomizations")?.globalValue as Record<string, unknown>;
     oldColorConfig["enabled"] = true;
     oldColorConfig["rules"] = {
         "*.mlog_invalid:mlog": {

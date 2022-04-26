@@ -14,10 +14,9 @@ async function printflushParser(lineNum, words, line, lines) {
         if (i == 0)
             tokenType = 'mlog_method';
         else
-            tokenType = (0, globals_1.identifyType)(token);
+            tokenType = (0, globals_1.identifyType)(token, i, expected_token_count);
         let _tokenModifiers = [...(0, globals_1.identifyModifiers)(token, [tokenType], i, expected_token_count)];
-        if (i == 2 && !/^message\d+$/.test(token))
-            _tokenModifiers.push('mlog_invalid');
+        //if (i == 2 && !/^message\d+$/.test(token)) _tokenModifiers.push('mlog_invalid');
         tokens.push({
             line: lineNum,
             startCharacter: offset,

@@ -105,7 +105,7 @@ function activate(context) {
     let tokenProviderDeactivate = vscode.languages.registerDocumentSemanticTokensProvider({ language: 'mlog' }, new DocumentSemanticTokensProvider(), legend);
     context.subscriptions.push(tokenProviderDeactivate);
     let config = vscode.workspace.getConfiguration();
-    let oldColorConfig = config.get("editor.semanticTokenColorCustomizations", {});
+    let oldColorConfig = config.inspect("editor.semanticTokenColorCustomizations")?.globalValue;
     oldColorConfig["enabled"] = true;
     oldColorConfig["rules"] = {
         "*.mlog_invalid:mlog": {
