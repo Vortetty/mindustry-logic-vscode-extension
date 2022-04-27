@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const vscode = require("vscode");
 const cp = require("child_process");
 const globals_1 = require("./parsers/globals");
+const updateJumpLines_1 = require("./updateJumpLines");
 function getOpenFile() {
     if (vscode.window.activeTextEditor != undefined) {
         let currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
@@ -118,6 +119,8 @@ function activate(context) {
         ...oldColorConfig["rules"]
     };
     config.update("editor.semanticTokenColorCustomizations", oldColorConfig, vscode.ConfigurationTarget.Global);
+    // Jump statement fixer
+    (0, updateJumpLines_1.setupJumpFixer)(context);
 }
 function deactivate() { }
 module.exports = {
