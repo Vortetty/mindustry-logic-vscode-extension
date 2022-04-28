@@ -15,6 +15,7 @@
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import { identifyType, IParsedToken, updateVars } from './parsers/globals';
+import { setupJumpFixer } from './updateJumpLines';
 
 function getOpenFile(): string | undefined {
     if (vscode.window.activeTextEditor != undefined) {
@@ -146,6 +147,9 @@ function activate(context: vscode.ExtensionContext) {
         ...(oldColorConfig["rules"] as Record<string, unknown>)
     };
     config.update("editor.semanticTokenColorCustomizations", oldColorConfig, vscode.ConfigurationTarget.Global);
+
+    // Jump statement fixer
+    setupJumpFixer(context);
 }
 
 function deactivate() {}
