@@ -169,6 +169,7 @@
     "dependencies": {
         "child_process": "^1.0.2",
         "diff": "^5.0.0",
-        "wait-forever": "^1.0.0"
+        "wait-forever": "^1.0.0",
+        "winterdiff": "^1.0.1"
     }
 }
