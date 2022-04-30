@@ -44,4 +44,3 @@ async function setParser(lineNum, words, line, lines) {
     return tokens;
 }
 exports.setParser = setParser;
-//# sourceMappingURL=set.js.map

@@ -288,4 +288,3 @@ commands.set("set", set_1.setParser);
 //commands.set("ucontrol", ucontrolParser);
 //commands.set("uradar", uradarParser);
 //commands.set("ulocate", ulocateParser);
-//# sourceMappingURL=extension.js.map

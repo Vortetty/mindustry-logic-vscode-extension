@@ -185,4 +185,3 @@ function identifyModifiers(text, expectedTypes, index, expectedParamCount, expec
     return [...modifiers];
 }
 exports.identifyModifiers = identifyModifiers;
-//# sourceMappingURL=globals.js.map

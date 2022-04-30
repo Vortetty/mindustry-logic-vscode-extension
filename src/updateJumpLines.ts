@@ -19,7 +19,7 @@ export function setupJumpFixer(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.workspace.onDidChangeTextDocument(function (event: vscode.TextDocumentChangeEvent) {
-            //if (event.document.languageId == 'mlog' && !jumpLineUpdates.get(event.document.uri) && event.reason != vscode.TextDocumentChangeReason.Undo && event.reason != vscode.TextDocumentChangeReason.Redo) {
+            if (event.document.languageId == 'mlog' && !jumpLineUpdates.get(event.document.uri) && event.reason != vscode.TextDocumentChangeReason.Undo && event.reason != vscode.TextDocumentChangeReason.Redo) {
             //    const document: vscode.TextDocument = event.document;
             //    const edits: readonly vscode.TextDocumentContentChangeEvent[] = event.contentChanges;
             //    const text: string = document.getText();
@@ -75,7 +75,7 @@ export function setupJumpFixer(context: vscode.ExtensionContext) {
             //} else {
             //    if (jumpLineUpdates.get(event.document.uri)) jumpLineUpdates.set(event.document.uri, false);
             //    return;
-            //}
+            }
         })
     );
 }

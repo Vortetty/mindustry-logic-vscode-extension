@@ -6,3 +6,5 @@ __pycache__/**
 __pycache__/**
 __pycache__/*
 __pycache__
+test_scripts/**
+test_scripts

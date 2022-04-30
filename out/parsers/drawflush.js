@@ -43,4 +43,3 @@ async function drawflushParser(lineNum, words, line, lines) {
     return tokens;
 }
 exports.drawflushParser = drawflushParser;
-//# sourceMappingURL=drawflush.js.map

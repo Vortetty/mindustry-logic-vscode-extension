@@ -41,4 +41,3 @@ async function __internal_unknown_instructionParser(lineNum, words, line, lines)
     return tokens;
 }
 exports.__internal_unknown_instructionParser = __internal_unknown_instructionParser;
-//# sourceMappingURL=__internal_unknown_instruction.js.map

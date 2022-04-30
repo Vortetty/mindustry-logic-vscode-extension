@@ -44,4 +44,3 @@ async function writeParser(lineNum, words, line, lines) {
     return tokens;
 }
 exports.writeParser = writeParser;
-//# sourceMappingURL=write.js.map

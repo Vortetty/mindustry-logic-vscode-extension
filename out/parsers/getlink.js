@@ -43,4 +43,3 @@ async function getlinkParser(lineNum, words, line, lines) {
     return tokens;
 }
 exports.getlinkParser = getlinkParser;
-//# sourceMappingURL=getlink.js.map

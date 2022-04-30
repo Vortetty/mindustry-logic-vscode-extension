@@ -44,4 +44,3 @@ async function readParser(lineNum, words, line, lines) {
     return tokens;
 }
 exports.readParser = readParser;
-//# sourceMappingURL=read.js.map
